@@ -21,7 +21,6 @@ namespace De_Vakacientjes
     /// </summary>
     public partial class AddChildWindow : Window
     {
-
         private void GetFamilies()
         {
             cmbFamily.Items.Clear();
@@ -56,6 +55,29 @@ namespace De_Vakacientjes
             var res = addFamilyWindow.ShowDialog();
 
             GetFamilies();
+        }
+
+        private void BtnOK_Click(object sender, RoutedEventArgs e)
+        {
+            MySqlConnection conn = new MySqlConnection(Application.Current.Resources["MySQLConn"].ToString());
+            conn.Open();
+
+            int familyId = -1;
+            string sql = $"select * from family where name = '{cmbFamily.Text}'";
+            MySqlCommand cmd = new MySqlCommand(sql, conn);
+            MySqlDataReader reader = cmd.ExecuteReader();
+
+            while (reader.Read())
+                familyId = Convert.ToInt32(reader["id"]);
+            reader.Close();
+
+            sql = $"insert into child(family_id, first_name, last_name) values ({familyId}, '{txtFirstName.Text}', '{txtLastName}')";
+            cmd.CommandText = sql;
+            cmd.ExecuteNonQuery();
+
+            conn.Close();
+
+            Close();
         }
     }
 }
