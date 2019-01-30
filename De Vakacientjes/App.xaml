@@ -4,6 +4,5 @@
              xmlns:local="clr-namespace:De_Vakacientjes"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
     </Application.Resources>
 </Application>

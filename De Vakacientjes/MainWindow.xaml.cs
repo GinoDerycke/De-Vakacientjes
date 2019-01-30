@@ -17,6 +17,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MySql.Data;
+using MySql.Data.MySqlClient;
 
 namespace De_Vakacientjes
 {
@@ -28,11 +30,61 @@ namespace De_Vakacientjes
         public MainWindow()
         {
             InitializeComponent();
+
+            Application.Current.Resources["MySQLConn"] = "server=localhost;user=root;database=vakacientjes;port=3306;password=2631";
         }
 
         DataSet xlsxDataSet;
 
         public object MessageBoxButtons { get; private set; }
+
+        private int GetChildFamilyId(string childName)
+        {
+            int familyId = -1;
+
+            int p = childName.IndexOf(" ", StringComparison.InvariantCultureIgnoreCase);
+            string firstName = "";
+            string lastName = "";
+            if (p != -1)
+            {
+                firstName = childName.Substring(0, p);
+                lastName = childName.Substring(p + 1, childName.Length - p - 1);
+            }
+            else
+            {
+                firstName = childName;
+            }
+
+            MySqlConnection conn = new MySqlConnection(Application.Current.Resources["MySQLConn"].ToString());
+
+            conn.Open();
+
+            string sql = "select * from child";
+            MySqlCommand cmd = new MySqlCommand(sql, conn);
+            MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+
+            DataSet dataSet = new DataSet();
+            adapter.Fill(dataSet);
+
+            DataTable table = dataSet.Tables[0];
+
+            DataRow[] foundRows = table.Select($"(first_name = '{firstName}') and (last_name = '{lastName}')");
+
+            if (foundRows.Length == 1)
+            {
+                DataRow r = foundRows[0];
+                familyId = r.Field<int>("family_id");
+            }
+            else
+            {
+                SelectChildWindow selectChildWindow = new SelectChildWindow(firstName, lastName);
+                var res = selectChildWindow.ShowDialog();
+            };
+
+            conn.Close();
+
+            return familyId;
+        }
 
         private bool AnalyzeData(int weekNr)
         {
@@ -99,19 +151,19 @@ namespace De_Vakacientjes
 
                             if (((child == true) || (parent == true)) && (name == ""))
                             {
-                                name = fieldValue;
+                                name = fieldValue.Trim();
                                 continue;
                             }
 
                             if ((name != "") && (startTime == ""))
                             {
-                                startTime = fieldValue;
+                                startTime = fieldValue.Trim();
                                 continue;
                             }
 
                             if ((startTime != "") && (endTime == ""))
                             {
-                                endTime = fieldValue;
+                                endTime = fieldValue.Trim();
 
                                 //Determine morning and afternoon
                                 string hourString = "";
@@ -146,11 +198,12 @@ namespace De_Vakacientjes
                                 //
                                 if (child)
                                 {
-                                    MessageBox.Show($"Kind: \n{name}\n{startTime}\n{endTime}\n{morning}\n{afterNoon}");
+                                    GetChildFamilyId(name);
+                                    //MessageBox.Show($"Kind: \n{name}\n{startTime}\n{endTime}\n{morning}\n{afterNoon}");
                                 }
                                 else
                                 {
-                                    MessageBox.Show($"Ouder: \n{name}\n{startTime}\n{endTime}\n{morning}\n{afterNoon}");
+                                    //MessageBox.Show($"Ouder: \n{name}\n{startTime}\n{endTime}\n{morning}\n{afterNoon}");
                                 }
                             }
                         }
@@ -201,9 +254,6 @@ namespace De_Vakacientjes
                 IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(stream);
 
                 xlsxDataSet = excelReader.AsDataSet();
-
-                //foreach (DataTable dt in xlsxDataSet.Tables)
-                //    MessageBox.Show(dt.TableName);
 
                 excelReader.Close();
 
