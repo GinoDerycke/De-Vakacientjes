@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:De_Vakacientjes"
         mc:Ignorable="d"
-        Title="De Vakacientjes" Height="450" Width="1235.526" WindowState="Maximized">
+        Title="De Vakacientjes" Height="450" Width="1235.526" WindowState="Maximized" Style="{StaticResource WindowStyle1}">
     <Grid>
-        <Button x:Name="btnOpen" Content="Open..." HorizontalAlignment="Left" Margin="24,24,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.207,-1.823" Click="BtnOpen_Click" Height="20"/>
+        <Button x:Name="btnOpen" Content="Open..." HorizontalAlignment="Left" Margin="24,24,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.207,-1.823" Click="BtnOpen_Click"/>
         <DataGrid x:Name="grdTest" HorizontalAlignment="Left" Height="335" Margin="72,59,0,0" VerticalAlignment="Top" Width="1068"/>
     </Grid>
 </Window>

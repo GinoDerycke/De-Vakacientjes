@@ -4,13 +4,37 @@
              xmlns:local="clr-namespace:De_Vakacientjes"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <!--<Style TargetType="Window">
-            <Setter Property="Background" Value="Blue" />
-        </Style>-->
-        <Style x:Key="Window1" 
-               TargetType="{x:Type Window}">
-            <Setter Property="Background"
-                    Value="Red" />
+        <Color x:Key="BackgroundColor">#FF323232</Color>
+        <Color x:Key="ForegroundColor">White</Color>
+        
+        <SolidColorBrush x:Key="ForegroundColorBrush" Color="{StaticResource ForegroundColor}" />
+        <SolidColorBrush x:Key="BackgroundColorBrush" Color="{StaticResource BackgroundColor}" />
+
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource BackgroundColorBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource ForegroundColorBrush}"/>
+            <Setter Property="Width" Value="100" />
+            <Setter Property="Height" Value="24"/>
+        </Style>
+
+        <Style TargetType="Label">
+            <Setter Property="Foreground" Value="{StaticResource ForegroundColorBrush}"/>
+        </Style>
+
+        <Style TargetType="TextBox">
+            <Setter Property="Width" Value="200" />
+            <Setter Property="Height" Value="24"/>
+            <Setter Property="MinWidth" Value="200"/>
+            <Setter Property="MinHeight" Value="24"/>
+        </Style>
+
+        <Style TargetType="ComboBox">
+            <Setter Property="Width" Value="200" />
+            <Setter Property="Height" Value="24"/>
+        </Style>
+
+        <Style x:Key="WindowStyle1" TargetType="{x:Type Window}">
+            <Setter Property="Background" Value="{StaticResource BackgroundColorBrush}"/>
         </Style>
     </Application.Resources>
 </Application>

@@ -30,7 +30,7 @@ namespace De_Vakacientjes
             _firstName = firstName;
             _lastName = lastName;
 
-            lblChild.Content = "Kind "+ $"{firstName + " " + lastName}" + " niet gevonden.";
+            lblChild.Content = "Kind "+ $"'{firstName + " " + lastName}'" + " niet gevonden.";
 
             var childList = VakacientjesDb.GetChildren();
             foreach (Child child in childList)
