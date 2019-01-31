@@ -21,7 +21,8 @@ namespace De_Vakacientjes
     {
         private string _firstName;
         private string _lastName;
-
+        public bool abort = false;
+               
         public SelectChildWindow(string firstName, string lastName)
         {
             InitializeComponent();
@@ -31,23 +32,58 @@ namespace De_Vakacientjes
 
             lblChild.Content = "Kind "+ $"{firstName + " " + lastName}" + " niet gevonden.";
 
-            MySqlConnection conn = new MySqlConnection(Application.Current.Resources["MySQLConn"].ToString());
-            conn.Open();
-
-            string sql = "select * from child";
-            MySqlCommand cmd = new MySqlCommand(sql, conn);
-            MySqlDataReader reader = cmd.ExecuteReader();
-
-            while (reader.Read())
-                cmbChild.Items.Add(reader["first_name"] + " " + reader["last_name"]);
-
-            conn.Close();
+            var childList = VakacientjesDb.GetChildren();
+            foreach (Child child in childList)
+                cmbChild.Items.Add(child.FirstName + " " + child.LastName);
         }
 
-        private void BtnChild_Click(object sender, RoutedEventArgs e)
+        private void BtnAddChild_Click(object sender, RoutedEventArgs e)
         {
             AddChildWindow addChildWindow = new AddChildWindow(_firstName, _lastName);
             var res = addChildWindow.ShowDialog();
+
+            if (res == true)
+            {
+                var childList = VakacientjesDb.GetChildren();
+                int maxId = -1;
+                int selectedIndex = -1;
+                cmbChild.Items.Clear();
+                foreach (Child child in childList)
+                {
+                    if (child.Id > maxId)
+                    {
+                        maxId = child.Id;
+                        selectedIndex = childList.IndexOf(child);
+                    }
+                    cmbChild.Items.Add(child.FirstName + " " + child.LastName);
+                }
+                cmbChild.SelectedIndex = selectedIndex;
+            }
+        }
+
+        private void BtnOK_Click(object sender, RoutedEventArgs e)
+        {
+            if (cmbChild.Text == "")
+            {
+                MessageBox.Show("Je hebt nog geen kind geselecteerd.", "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            DialogResult = true;
+            Close();
+        }
+
+        private void BtnIgnore_Click(object sender, RoutedEventArgs e)
+        {
+            DialogResult = false;
+            Close();
+        }
+
+        private void BtnAbor_Click(object sender, RoutedEventArgs e)
+        {
+            DialogResult = false;
+            abort = true;
+            Close();
         }
     }
 }

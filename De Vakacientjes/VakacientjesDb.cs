@@ -96,7 +96,7 @@ namespace De_Vakacientjes
 
         public static Family GetFamily(string familyName)
         {
-            Family family;
+            Family family = new Family();
 
             MySqlConnection conn = new MySqlConnection(connectionString);
 
@@ -104,15 +104,15 @@ namespace De_Vakacientjes
             {
                 conn.Open();
 
-                string sql = $"select * from family where name = '{familyName}'";
+                string sql = $"select * from family where lower(name) = lower('{familyName}')";
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
                 MySqlDataReader reader = cmd.ExecuteReader();
 
                 while (reader.Read())
                 {
                     family.Id = Convert.ToInt32(reader["id"]);
-                    family.Name = reader["name"];
-                    family.Email = reader["email"];
+                    family.Name = reader["name"].ToString();
+                    family.Email = reader["email"].ToString();
                 }
                 reader.Close();
 
@@ -120,7 +120,7 @@ namespace De_Vakacientjes
             }
             catch (Exception e)
             {
-                MessageBox.Show($"VakacientjesDb.GetFamilyId failed.\n\n{e.ToString()}");
+                MessageBox.Show($"VakacientjesDb.GetFamily failed.\n\n{e.ToString()}");
 
                 if (conn.State == System.Data.ConnectionState.Open)
                     conn.Close();
@@ -129,10 +129,9 @@ namespace De_Vakacientjes
             return family;
         }
 
-        public static Family GetChild(string firstName, string lastName)
+        public static Child GetChild(string firstName, string lastName)
         {
-            ...
-            Child child;
+            Child child = new Child();
 
             MySqlConnection conn = new MySqlConnection(connectionString);
 
@@ -140,15 +139,17 @@ namespace De_Vakacientjes
             {
                 conn.Open();
 
-                string sql = $"select * from child, family where (first_name = '{firstName}') and (last_name = '{lastName}')";
+                string sql = "select c.id as c_id, c.family_id, c.first_name, c.last_name, f.id as f_id " +
+                             $"from child c, family f where (lower(c.first_name) = lower('{firstName}')) and (lower(c.last_name) = lower('{lastName}')) and (c.family_id = f.id)";
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
                 MySqlDataReader reader = cmd.ExecuteReader();
 
                 while (reader.Read())
                 {
-                    child.Id = Convert.ToInt32(reader["id"]);
-                    child.FamilyId = reader["name"];
-                    child.Email = reader["email"];
+                    child.Id = Convert.ToInt32(reader["c_id"]);
+                    child.FamilyId = Convert.ToInt32(reader["family_id"]);
+                    child.FirstName = reader["first_name"].ToString();
+                    child.LastName = reader["last_name"].ToString();
                 }
                 reader.Close();
 
@@ -156,14 +157,163 @@ namespace De_Vakacientjes
             }
             catch (Exception e)
             {
-                MessageBox.Show($"VakacientjesDb.GetFamilyId failed.\n\n{e.ToString()}");
+                MessageBox.Show($"VakacientjesDb.GetChild failed.\n\n{e.ToString()}");
 
                 if (conn.State == System.Data.ConnectionState.Open)
                     conn.Close();
             }
 
-            return family;
+            return child;
         }
 
+        public static Parent GetParent(string firstName, string lastName)
+        {
+            Parent parent = new Parent();
+
+            MySqlConnection conn = new MySqlConnection(connectionString);
+
+            try
+            {
+                conn.Open();
+
+                string sql = "select p.id as p_id, p.family_id, p.first_name, p.last_name, f.id as f_id " +
+                             $"from parent p, family f where (lower(p.first_name) = lower('{firstName}')) and (lower(p.last_name) = lower('{lastName}')) and (p.family_id = f.id)";
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    parent.Id = Convert.ToInt32(reader["p_id"]);
+                    parent.FamilyId = Convert.ToInt32(reader["family_id"]);
+                    parent.FirstName = reader["first_name"].ToString();
+                    parent.LastName = reader["last_name"].ToString();
+                }
+                reader.Close();
+
+                conn.Close();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"VakacientjesDb.GetParent failed.\n\n{e.ToString()}");
+
+                if (conn.State == System.Data.ConnectionState.Open)
+                    conn.Close();
+            }
+
+            return parent;
+        }
+
+        public static List<Family> GetFamilies()
+        {
+            List<Family> list = new List<Family>();
+
+            MySqlConnection conn = new MySqlConnection(connectionString);
+
+            try
+            {
+                conn.Open();
+
+                string sql = "select * from family order by name";
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    Family family = new Family();
+                    family.Id = Convert.ToInt32(reader["id"]);
+                    family.Name = reader["name"].ToString();
+                    family.Email = reader["email"].ToString();
+                    list.Add(family);
+                }
+                reader.Close();
+
+                conn.Close();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"VakacientjesDb.GetFamilies failed.\n\n{e.ToString()}");
+
+                if (conn.State == System.Data.ConnectionState.Open)
+                    conn.Close();
+            }
+
+            return list;
+        }
+
+        public static List<Child> GetChildren()
+        {
+            List<Child> list = new List<Child>();
+
+            MySqlConnection conn = new MySqlConnection(connectionString);
+
+            try
+            {
+                conn.Open();
+
+                string sql = "select * from child order by last_name, first_name";
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    Child child = new Child();
+                    child.Id = Convert.ToInt32(reader["id"]);
+                    child.FamilyId = Convert.ToInt32(reader["family_id"]);
+                    child.FirstName = reader["first_name"].ToString();
+                    child.LastName = reader["last_name"].ToString();
+                    list.Add(child);
+                }
+                reader.Close();
+
+                conn.Close();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"VakacientjesDb.GetChildren failed.\n\n{e.ToString()}");
+
+                if (conn.State == System.Data.ConnectionState.Open)
+                    conn.Close();
+            }
+
+            return list;
+        }
+
+        public static List<Parent> GetParents()
+        {
+            List<Parent> list = new List<Parent>();
+
+            MySqlConnection conn = new MySqlConnection(connectionString);
+
+            try
+            {
+                conn.Open();
+
+                string sql = "select * from parent order by last_name, first_name";
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    Parent parent = new Parent();
+                    parent.Id = Convert.ToInt32(reader["id"]);
+                    parent.FamilyId = Convert.ToInt32(reader["family_id"]);
+                    parent.FirstName = reader["first_name"].ToString();
+                    parent.LastName = reader["last_name"].ToString();
+                    list.Add(parent);
+                }
+                reader.Close();
+
+                conn.Close();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"VakacientjesDb.GetParents failed.\n\n{e.ToString()}");
+
+                if (conn.State == System.Data.ConnectionState.Open)
+                    conn.Close();
+            }
+
+            return list;
+        }
     }
 }

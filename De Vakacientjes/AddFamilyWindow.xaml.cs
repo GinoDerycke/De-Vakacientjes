@@ -28,8 +28,22 @@ namespace De_Vakacientjes
 
         private void BtnOK_Click(object sender, RoutedEventArgs e)
         {
-            VakacientjesDb.AddFamily(txtName.Text, txtEmail.Text);
+            if (txtName.Text.Trim() == "")
+            {
+                MessageBox.Show("Je hebt nog geen naam ingevuld.", "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
 
+            if (VakacientjesDb.AddFamily(txtName.Text.Trim(), txtEmail.Text.Trim()) == true)
+            {
+                DialogResult = true;
+                Close();
+            }
+        }
+
+        private void BtnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            DialogResult = false;
             Close();
         }
     }

@@ -5,16 +5,23 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:De_Vakacientjes"
         mc:Ignorable="d"
-        Title="Voeg kind toe" Height="450" Width="800" WindowStartupLocation="CenterScreen">
+        Title="Voeg kind toe" Height="450" Width="800" WindowStartupLocation="CenterScreen" WindowStyle="None">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="193*"/>
+            <ColumnDefinition Width="85*"/>
+            <ColumnDefinition Width="373*"/>
+            <ColumnDefinition Width="141*"/>
+        </Grid.ColumnDefinitions>
         <Label Content="Voornaam" HorizontalAlignment="Left" Margin="62,57,0,0" VerticalAlignment="Top"/>
         <Label Content="Familienaam" HorizontalAlignment="Left" Margin="62,105,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtFirstName" HorizontalAlignment="Left" Height="26" Margin="151,57,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="353"/>
-        <TextBox x:Name="txtLastName" HorizontalAlignment="Left" Height="26" Margin="151,105,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="353"/>
+        <TextBox x:Name="txtFirstName" HorizontalAlignment="Left" Height="26" Margin="151,57,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="353" Grid.ColumnSpan="3"/>
+        <TextBox x:Name="txtLastName" HorizontalAlignment="Left" Height="26" Margin="151,105,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="353" Grid.ColumnSpan="3"/>
         <Label Content="Familie" HorizontalAlignment="Left" Margin="62,158,0,0" VerticalAlignment="Top"/>
-        <ComboBox x:Name="cmbFamily" HorizontalAlignment="Left" Margin="151,158,0,0" VerticalAlignment="Top" Width="353"/>
-        <Button x:Name="btnAddFamily" Content="+" HorizontalAlignment="Left" Margin="528,160,0,0" VerticalAlignment="Top" Width="75" Click="BtnAddFamily_Click"/>
-        <Button x:Name="btnOK" Content="OK" HorizontalAlignment="Left" Margin="270,272,0,0" VerticalAlignment="Top" Width="75" Click="BtnOK_Click"/>
-        <Button x:Name="btnCancel" Content="Annuleren" HorizontalAlignment="Left" Margin="372,272,0,0" VerticalAlignment="Top" Width="75"/>
+        <ComboBox x:Name="cmbFamily" HorizontalAlignment="Left" Margin="151,158,0,0" VerticalAlignment="Top" Width="353" Grid.ColumnSpan="3"/>
+        <Button x:Name="btnAddFamily" Content="+" HorizontalAlignment="Left" Margin="250,160,0,0" VerticalAlignment="Top" Width="75" Click="BtnAddFamily_Click" Grid.Column="2"/>
+        <Button x:Name="btnOK" Content="OK" HorizontalAlignment="Left" Margin="77,272,0,0" VerticalAlignment="Top" Width="75" Click="BtnOK_Click" Grid.Column="1" Grid.ColumnSpan="2"/>
+        <Button x:Name="btnCancel" Content="Annuleren" HorizontalAlignment="Left" Margin="94,272,0,0" VerticalAlignment="Top" Width="75" Click="BtnCancel_Click" Grid.Column="2"/>
+        <Button x:Name="btnSwitchNames" Content="Omwisselen" HorizontalAlignment="Left" Height="28" Margin="250,83,0,0" VerticalAlignment="Top" Width="75" Click="BtnSwitchNames_Click" Grid.Column="2"/>
     </Grid>
 </Window>

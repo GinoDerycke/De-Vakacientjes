@@ -34,52 +34,19 @@ namespace De_Vakacientjes
 
         public object MessageBoxButtons { get; private set; }
 
-        private int GetChildFamilyId(string childName)
+        private void GetFirstNameLastName(string name, out string firstName, out string lastName)
         {
-            int familyId = -1;
-
-            int p = childName.IndexOf(" ", StringComparison.InvariantCultureIgnoreCase);
-            string firstName = "";
-            string lastName = "";
+            int p = name.IndexOf(" ", StringComparison.InvariantCultureIgnoreCase);
             if (p != -1)
             {
-                firstName = childName.Substring(0, p);
-                lastName = childName.Substring(p + 1, childName.Length - p - 1);
+                firstName = name.Substring(0, p);
+                lastName = name.Substring(p + 1, name.Length - p - 1);
             }
             else
             {
-                firstName = childName;
+                firstName = name;
+                lastName = "";
             }
-
-            MySqlConnection conn = new MySqlConnection(Application.Current.Resources["MySQLConn"].ToString());
-
-            conn.Open();
-
-            string sql = "select * from child";
-            MySqlCommand cmd = new MySqlCommand(sql, conn);
-            MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
-
-            DataSet dataSet = new DataSet();
-            adapter.Fill(dataSet);
-
-            DataTable table = dataSet.Tables[0];
-
-            DataRow[] foundRows = table.Select($"(first_name = '{firstName}') and (last_name = '{lastName}')");
-
-            if (foundRows.Length == 1)
-            {
-                DataRow r = foundRows[0];
-                familyId = r.Field<int>("family_id");
-            }
-            else
-            {
-                SelectChildWindow selectChildWindow = new SelectChildWindow(firstName, lastName);
-                var res = selectChildWindow.ShowDialog();
-            };
-
-            conn.Close();
-
-            return familyId;
         }
 
         private bool AnalyzeData(int weekNr)
@@ -191,15 +158,23 @@ namespace De_Vakacientjes
                                 if (hour > 13)
                                     afterNoon = true;
 
+                                string firstName;
+                                string lastName;
+                                GetFirstNameLastName(name, out firstName, out lastName);
+
                                 //
                                 if (child)
                                 {
-                                    GetChildFamilyId(name);
-                                    //MessageBox.Show($"Kind: \n{name}\n{startTime}\n{endTime}\n{morning}\n{afterNoon}");
+                                    var c = VakacientjesDb.GetChild(firstName, lastName);
+                                    if (c.Id == -1)
+                                    {
+                                        SelectChildWindow selectChildWindow = new SelectChildWindow(firstName, lastName);
+                                        var res = selectChildWindow.ShowDialog();
+                                    }
                                 }
                                 else
                                 {
-                                    //MessageBox.Show($"Ouder: \n{name}\n{startTime}\n{endTime}\n{morning}\n{afterNoon}");
+                                    //TODO GetParent
                                 }
                             }
                         }

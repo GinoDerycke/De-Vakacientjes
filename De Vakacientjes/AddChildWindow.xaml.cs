@@ -19,26 +19,6 @@ namespace De_Vakacientjes
     /// </summary>
     public partial class AddChildWindow : Window
     {
-        private void GetFamilies()
-        {
-            cmbFamily.Items.Clear();
-
-            /*
-            MySqlConnection conn = new MySqlConnection(Application.Current.Resources["MySQLConn"].ToString());
-            conn.Open();
-
-            string sql = "select * from family";
-            MySqlCommand cmd = new MySqlCommand(sql, conn);
-
-            MySqlDataReader reader = cmd.ExecuteReader();
-
-            while (reader.Read())
-                cmbFamily.Items.Add(reader["name"].ToString());
-
-            conn.Close();
-            */ //TODO GetFamilies
-        }
-
         public AddChildWindow(string firstName, string lastName)
         {
             InitializeComponent();
@@ -46,7 +26,9 @@ namespace De_Vakacientjes
             txtFirstName.Text = firstName;
             txtLastName.Text = lastName;
 
-            GetFamilies();
+            var familyList = VakacientjesDb.GetFamilies();
+            foreach (Family family in familyList)
+                cmbFamily.Items.Add(family.Name);
         }
 
         private void BtnAddFamily_Click(object sender, RoutedEventArgs e)
@@ -54,15 +36,72 @@ namespace De_Vakacientjes
             AddFamilyWindow addFamilyWindow = new AddFamilyWindow(txtLastName.Text);
             var res = addFamilyWindow.ShowDialog();
 
-            GetFamilies();
+            if (res == true)
+            {
+                var familyList = VakacientjesDb.GetFamilies();
+                int maxId = -1;
+                int selectedIndex = -1;
+                cmbFamily.Items.Clear();
+                foreach (Family family in familyList)
+                {
+                    if (family.Id > maxId)
+                    {
+                        maxId = family.Id;
+                        selectedIndex = familyList.IndexOf(family);
+                    }
+                    cmbFamily.Items.Add(family.Name);
+                }
+                cmbFamily.SelectedIndex = selectedIndex;
+            }
         }
 
         private void BtnOK_Click(object sender, RoutedEventArgs e)
         {
-            Family family = VakacientjesDb.GetFamily(cmbFamily.Text);
-            VakacientjesDb.AddChild(family.Id, txtFirstName.Text, txtLastName.Text);
+            if (txtFirstName.Text.Trim() == "")
+            {
+                MessageBox.Show("Je hebt nog geen voornaam ingevuld.", "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
 
+            if (txtLastName.Text.Trim() == "")
+            {
+                MessageBox.Show("Je hebt nog geen familienaam ingevuld.", "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (cmbFamily.Text == "")
+            {
+                MessageBox.Show("Je hebt nog geen familie geselecteerd.", "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            Family family = VakacientjesDb.GetFamily(cmbFamily.Text);
+
+            if (family.Id == -1)
+            {
+                MessageBox.Show($"Familie '{cmbFamily.Text}' niet gevonden.", "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (VakacientjesDb.AddChild(family.Id, txtFirstName.Text.Trim(), txtLastName.Text.Trim()) == true)
+            {
+                DialogResult = true;
+                Close();
+            }
+                
+        }
+
+        private void BtnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            DialogResult = false;
             Close();
+        }
+
+        private void BtnSwitchNames_Click(object sender, RoutedEventArgs e)
+        {
+            string temp = txtLastName.Text;
+            txtLastName.Text = txtFirstName.Text;
+            txtFirstName.Text = temp;
         }
     }
 }

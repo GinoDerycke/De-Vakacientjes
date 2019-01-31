@@ -5,12 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:De_Vakacientjes"
         mc:Ignorable="d"
-        Title="Selecteer kind" Height="450" Width="800" WindowStartupLocation="CenterScreen">
+        Title="Selecteer kind" Height="450" Width="800" WindowStartupLocation="CenterScreen" WindowStyle="None">
     <Grid>
         <Label x:Name="lblChild" Content="Kind niet gevonden" HorizontalAlignment="Left" Margin="24,24,0,0" VerticalAlignment="Top"/>
         <ComboBox x:Name="cmbChild" HorizontalAlignment="Left" Height="34" Margin="24,76,0,0" VerticalAlignment="Top" Width="546"/>
-        <Button x:Name="btnChild" Content="+" HorizontalAlignment="Left" Height="34" Margin="588,76,0,0" VerticalAlignment="Top" Width="71" Click="BtnChild_Click"/>
-        <Button x:Name="btnOK" Content="OK" HorizontalAlignment="Left" Margin="270,272,0,0" VerticalAlignment="Top" Width="75"/>
-        <Button x:Name="btnIgnore" Content="Overslaan" HorizontalAlignment="Left" Margin="372,272,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button x:Name="btnAddChild" Content="Toevoegen..." HorizontalAlignment="Left" Height="34" Margin="588,76,0,0" VerticalAlignment="Top" Width="71" Click="BtnAddChild_Click"/>
+        <Button x:Name="btnOK" Content="OK" HorizontalAlignment="Left" Margin="270,272,0,0" VerticalAlignment="Top" Width="75" Click="BtnOK_Click"/>
+        <Button x:Name="btnIgnore" Content="Overslaan" HorizontalAlignment="Left" Margin="372,272,0,0" VerticalAlignment="Top" Width="75" Click="BtnIgnore_Click"/>
+        <Button x:Name="btnAbor" Content="Afbreken" HorizontalAlignment="Left" Margin="469,272,0,0" VerticalAlignment="Top" Width="75" Click="BtnAbor_Click"/>
     </Grid>
 </Window>

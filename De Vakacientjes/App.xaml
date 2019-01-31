@@ -4,5 +4,13 @@
              xmlns:local="clr-namespace:De_Vakacientjes"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
+        <!--<Style TargetType="Window">
+            <Setter Property="Background" Value="Blue" />
+        </Style>-->
+        <Style x:Key="Window1" 
+               TargetType="{x:Type Window}">
+            <Setter Property="Background"
+                    Value="Red" />
+        </Style>
     </Application.Resources>
 </Application>
