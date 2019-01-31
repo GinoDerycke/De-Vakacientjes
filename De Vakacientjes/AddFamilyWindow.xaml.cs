@@ -11,8 +11,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using MySql.Data;
-using MySql.Data.MySqlClient;
 
 namespace De_Vakacientjes
 {
@@ -30,14 +28,7 @@ namespace De_Vakacientjes
 
         private void BtnOK_Click(object sender, RoutedEventArgs e)
         {
-            MySqlConnection conn = new MySqlConnection(Application.Current.Resources["MySQLConn"].ToString());
-            conn.Open();
-
-            string sql = $"insert into family(name, email) values ('{txtName.Text}', '{txtEmail.Text}')";
-            MySqlCommand cmd = new MySqlCommand(sql, conn);
-            cmd.ExecuteNonQuery();
-
-            conn.Close();
+            VakacientjesDb.AddFamily(txtName.Text, txtEmail.Text);
 
             Close();
         }

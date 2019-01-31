@@ -17,8 +17,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using MySql.Data;
-using MySql.Data.MySqlClient;
 
 namespace De_Vakacientjes
 {
@@ -30,8 +28,6 @@ namespace De_Vakacientjes
         public MainWindow()
         {
             InitializeComponent();
-
-            Application.Current.Resources["MySQLConn"] = "server=localhost;user=root;database=vakacientjes;port=3306;password=2631";
         }
 
         DataSet xlsxDataSet;

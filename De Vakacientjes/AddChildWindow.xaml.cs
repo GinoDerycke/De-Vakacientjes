@@ -11,8 +11,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using MySql.Data;
-using MySql.Data.MySqlClient;
 
 namespace De_Vakacientjes
 {
@@ -25,6 +23,7 @@ namespace De_Vakacientjes
         {
             cmbFamily.Items.Clear();
 
+            /*
             MySqlConnection conn = new MySqlConnection(Application.Current.Resources["MySQLConn"].ToString());
             conn.Open();
 
@@ -37,6 +36,7 @@ namespace De_Vakacientjes
                 cmbFamily.Items.Add(reader["name"].ToString());
 
             conn.Close();
+            */ //TODO GetFamilies
         }
 
         public AddChildWindow(string firstName, string lastName)
@@ -59,23 +59,8 @@ namespace De_Vakacientjes
 
         private void BtnOK_Click(object sender, RoutedEventArgs e)
         {
-            MySqlConnection conn = new MySqlConnection(Application.Current.Resources["MySQLConn"].ToString());
-            conn.Open();
-
-            int familyId = -1;
-            string sql = $"select * from family where name = '{cmbFamily.Text}'";
-            MySqlCommand cmd = new MySqlCommand(sql, conn);
-            MySqlDataReader reader = cmd.ExecuteReader();
-
-            while (reader.Read())
-                familyId = Convert.ToInt32(reader["id"]);
-            reader.Close();
-
-            sql = $"insert into child(family_id, first_name, last_name) values ({familyId}, '{txtFirstName.Text}', '{txtLastName}')";
-            cmd.CommandText = sql;
-            cmd.ExecuteNonQuery();
-
-            conn.Close();
+            Family family = VakacientjesDb.GetFamily(cmbFamily.Text);
+            VakacientjesDb.AddChild(family.Id, txtFirstName.Text, txtLastName.Text);
 
             Close();
         }
