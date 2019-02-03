@@ -15,6 +15,9 @@ namespace De_Vakacientjes
 
         public static bool AddFamily(string name, string email)
         {
+            name = name.Trim();
+            email = email.Trim();
+
             MySqlConnection conn = new MySqlConnection(connectionString);
 
             try
@@ -42,6 +45,9 @@ namespace De_Vakacientjes
 
         public static bool AddChild(int familyId, string firstName, string lastName)
         {
+            firstName = firstName.Trim();
+            lastName = lastName.Trim();
+
             MySqlConnection conn = new MySqlConnection(connectionString);
 
             try
@@ -69,6 +75,9 @@ namespace De_Vakacientjes
 
         public static bool AddParent(int familyId, string firstName, string lastName)
         {
+            firstName = firstName.Trim();
+            lastName = lastName.Trim();
+
             MySqlConnection conn = new MySqlConnection(connectionString);
 
             try
@@ -96,6 +105,8 @@ namespace De_Vakacientjes
 
         public static Family GetFamily(string familyName)
         {
+            familyName = familyName.Trim();
+
             Family family = new Family();
 
             MySqlConnection conn = new MySqlConnection(connectionString);
@@ -131,6 +142,9 @@ namespace De_Vakacientjes
 
         public static Child GetChild(string firstName, string lastName)
         {
+            firstName = firstName.Trim();
+            lastName = lastName.Trim();
+
             Child child = new Child();
 
             MySqlConnection conn = new MySqlConnection(connectionString);
@@ -166,8 +180,67 @@ namespace De_Vakacientjes
             return child;
         }
 
+        public static Child GetChild(string fullName)
+        {
+            fullName = fullName.Trim();
+
+            Child child = new Child();
+
+            MySqlConnection conn = new MySqlConnection(connectionString);
+
+            try
+            {
+                conn.Open();
+
+                string sql = "select c.id as c_id, c.family_id, c.first_name, c.last_name, f.id as f_id " +
+                             $"from child c, family f where (lower(CONCAT(c.first_name, ' ', c.last_name)) = lower('{fullName}')) and (c.family_id = f.id)";
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    child.Id = Convert.ToInt32(reader["c_id"]);
+                    child.FamilyId = Convert.ToInt32(reader["family_id"]);
+                    child.FirstName = reader["first_name"].ToString();
+                    child.LastName = reader["last_name"].ToString();
+                }
+                reader.Close();
+
+                if (child.Id == -1)
+                {
+                    sql = "select c.id as c_id, c.family_id, c.first_name, c.last_name, f.id as f_id " +
+                           $"from child c, family f where (lower(CONCAT(c.last_name, ' ', c.first_name)) = lower('{fullName}')) and (c.family_id = f.id)";
+                    cmd.CommandText = sql;
+                    reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        child.Id = Convert.ToInt32(reader["c_id"]);
+                        child.FamilyId = Convert.ToInt32(reader["family_id"]);
+                        child.FirstName = reader["first_name"].ToString();
+                        child.LastName = reader["last_name"].ToString();
+                    }
+                    reader.Close();
+                }
+
+                conn.Close();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"VakacientjesDb.GetChild failed.\n\n{e.ToString()}");
+
+                if (conn.State == System.Data.ConnectionState.Open)
+                    conn.Close();
+            }
+
+            return child;
+        }
+
         public static Parent GetParent(string firstName, string lastName)
         {
+            firstName = firstName.Trim();
+            lastName = lastName.Trim();
+
             Parent parent = new Parent();
 
             MySqlConnection conn = new MySqlConnection(connectionString);
@@ -189,6 +262,63 @@ namespace De_Vakacientjes
                     parent.LastName = reader["last_name"].ToString();
                 }
                 reader.Close();
+
+                conn.Close();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"VakacientjesDb.GetParent failed.\n\n{e.ToString()}");
+
+                if (conn.State == System.Data.ConnectionState.Open)
+                    conn.Close();
+            }
+
+            return parent;
+        }
+
+        public static Parent GetParent(string fullName)
+        {
+            fullName = fullName.Trim();
+
+            Parent parent = new Parent();
+
+            MySqlConnection conn = new MySqlConnection(connectionString);
+
+            try
+            {
+                conn.Open();
+
+                string sql = "select p.id as p_id, p.family_id, p.first_name, p.last_name, f.id as f_id " +
+                             $"from parent p, family f where (lower(CONCAT(p.first_name, ' ', p.last_name)) = lower('{fullName}')) and (p.family_id = f.id)";
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    parent.Id = Convert.ToInt32(reader["p_id"]);
+                    parent.FamilyId = Convert.ToInt32(reader["family_id"]);
+                    parent.FirstName = reader["first_name"].ToString();
+                    parent.LastName = reader["last_name"].ToString();
+                }
+                reader.Close();
+
+                if (parent.Id == -1)
+                {
+                    sql = "select p.id as p_id, p.family_id, p.first_name, p.last_name, f.id as f_id " +
+                           $"from parent p, family f where (lower(CONCAT(p.last_name, ' ', p.first_name)) = lower('{fullName}')) and (p.family_id = f.id)";
+                    cmd.CommandText = sql;
+
+                    reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        parent.Id = Convert.ToInt32(reader["p_id"]);
+                        parent.FamilyId = Convert.ToInt32(reader["family_id"]);
+                        parent.FirstName = reader["first_name"].ToString();
+                        parent.LastName = reader["last_name"].ToString();
+                    }
+                    reader.Close();
+                }
 
                 conn.Close();
             }

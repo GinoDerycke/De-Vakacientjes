@@ -34,7 +34,7 @@ namespace De_Vakacientjes
                 return;
             }
 
-            if (VakacientjesDb.AddFamily(txtName.Text.Trim(), txtEmail.Text.Trim()) == true)
+            if (VakacientjesDb.AddFamily(txtName.Text, txtEmail.Text) == true)
             {
                 DialogResult = true;
                 Close();

@@ -49,9 +49,9 @@ namespace De_Vakacientjes
             }
         }
 
-        private bool AnalyzeData(int weekNr)
+        private bool AnalyzeData(List<FamilyActivity> familyActivityList, int weekNumber)
         {
-            int tableNr = xlsxDataSet.Tables.IndexOf($"Week {weekNr}");
+            int tableNr = xlsxDataSet.Tables.IndexOf($"Week {weekNumber}");
 
             if (tableNr == -1) return false;
 
@@ -65,7 +65,8 @@ namespace De_Vakacientjes
             int colDonderdag = -1;
             int colVrijdag = -1;
             bool validDayColumns = false;
-
+            bool abort = false;
+            
             foreach (DataRow row in table.Rows)
             {
                 bool child = false;
@@ -74,6 +75,7 @@ namespace De_Vakacientjes
                 string startTime = "";
                 string endTime = "";
                 bool newDay = false;
+                int dayNumber = -1;
                 bool morning = false;
                 bool afterNoon = false;
 
@@ -98,6 +100,17 @@ namespace De_Vakacientjes
                                 newDay = false;
                                 morning = false;
                                 afterNoon = false;
+
+                                if (i == colMaandag)
+                                    dayNumber = 1;
+                                if (i == colDinsdag)
+                                    dayNumber = 2;
+                                if (i == colWoensdag)
+                                    dayNumber = 3;
+                                if (i == colDonderdag)
+                                    dayNumber = 4;
+                                if (i == colVrijdag)
+                                    dayNumber = 5;
                             }
 
                             if (fieldValue.StartsWith("Kind", StringComparison.InvariantCultureIgnoreCase) == true)
@@ -136,7 +149,7 @@ namespace De_Vakacientjes
                                 if (p == -1)
                                     p = startTime.IndexOf(":", StringComparison.InvariantCultureIgnoreCase);
                                 hourString = startTime.Substring(0, p);
-                                
+
                                 int hour = 0;
                                 if (String.IsNullOrWhiteSpace(hourString) == false)
                                     hour = Convert.ToInt32(hourString);
@@ -158,23 +171,123 @@ namespace De_Vakacientjes
                                 if (hour > 13)
                                     afterNoon = true;
 
-                                string firstName;
-                                string lastName;
-                                GetFirstNameLastName(name, out firstName, out lastName);
-
                                 //
                                 if (child)
                                 {
-                                    var c = VakacientjesDb.GetChild(firstName, lastName);
-                                    if (c.Id == -1)
+                                    var child1 = VakacientjesDb.GetChild(name);
+                                    if (child1.Id == -1)
                                     {
+                                        string firstName;
+                                        string lastName;
+                                        GetFirstNameLastName(name, out firstName, out lastName);
+
                                         SelectChildWindow selectChildWindow = new SelectChildWindow(firstName, lastName);
                                         var res = selectChildWindow.ShowDialog();
+                                        if (res == true)
+                                        {
+                                            child1 = VakacientjesDb.GetChild(selectChildWindow.cmbChild.Text);
+                                            if (child1.Id == -1)
+                                            {
+                                                MessageBox.Show($"Onverwachte fout: kind '{selectChildWindow.cmbChild.Text}' toch niet gevonden." +
+                                                                "\n\n De bewerking wordt afgebroken.", "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
+                                                abort = true;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            abort = selectChildWindow.abort;
+                                        }
+                                    }
+
+                                    if (child1.Id != -1)
+                                    {
+                                        FamilyActivity familyActivity = familyActivityList.FirstOrDefault(a => a.FamilyId == child1.FamilyId);
+                                        if (familyActivity == null)
+                                        {
+                                            familyActivity = new FamilyActivity();
+                                            familyActivity.FamilyId = child1.FamilyId;
+                                            familyActivityList.Add(familyActivity);
+                                        }
+
+                                        if (morning == true)
+                                        {
+                                            PlayActivity playActivity = new PlayActivity();
+                                            playActivity.PersonId = child1.Id;
+                                            playActivity.WeekNumber = weekNumber;
+                                            playActivity.DayNumber = dayNumber;
+                                            playActivity.Morning = true;
+                                            familyActivity.ChildPlayActivities.Add(playActivity);
+                                        }
+
+                                        if (afterNoon == true)
+                                        {
+                                            PlayActivity playActivity = new PlayActivity();
+                                            playActivity.PersonId = child1.Id;
+                                            playActivity.WeekNumber = weekNumber;
+                                            playActivity.DayNumber = dayNumber;
+                                            playActivity.Morning = false;
+                                            familyActivity.ChildPlayActivities.Add(playActivity);
+                                        }
                                     }
                                 }
                                 else
                                 {
-                                    //TODO GetParent
+                                    var parent1 = VakacientjesDb.GetParent(name);
+                                    if (parent1.Id == -1)
+                                    {
+                                        string firstName;
+                                        string lastName;
+                                        GetFirstNameLastName(name, out firstName, out lastName);
+
+                                        SelectChildWindow selectChildWindow = new SelectChildWindow(firstName, lastName);
+                                        selectChildWindow.parentMode = true;
+                                        var res = selectChildWindow.ShowDialog();
+                                        if (res == true)
+                                        {
+                                            parent1 = VakacientjesDb.GetParent(selectChildWindow.cmbChild.Text);
+                                            if (parent1.Id == -1)
+                                            {
+                                                MessageBox.Show($"Onverwachte fout: ouder '{selectChildWindow.cmbChild.Text}' toch niet gevonden." +
+                                                                "\n\n De bewerking wordt afgebroken.", "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
+                                                abort = true;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            abort = selectChildWindow.abort;
+                                        }
+                                    }
+
+                                    if (parent1.Id != -1)
+                                    {
+                                        FamilyActivity familyActivity = familyActivityList.FirstOrDefault(a => a.FamilyId == parent1.FamilyId);
+                                        if (familyActivity == null)
+                                        {
+                                            familyActivity = new FamilyActivity();
+                                            familyActivity.FamilyId = parent1.FamilyId;
+                                            familyActivityList.Add(familyActivity);
+                                        }
+
+                                        if (morning == true)
+                                        {
+                                            PlayActivity playActivity = new PlayActivity();
+                                            playActivity.PersonId = parent1.Id;
+                                            playActivity.WeekNumber = weekNumber;
+                                            playActivity.DayNumber = dayNumber;
+                                            playActivity.Morning = true;
+                                            familyActivity.ParentPlayActivities.Add(playActivity);
+                                        }
+
+                                        if (afterNoon == true)
+                                        {
+                                            PlayActivity playActivity = new PlayActivity();
+                                            playActivity.PersonId = parent1.Id;
+                                            playActivity.WeekNumber = weekNumber;
+                                            playActivity.DayNumber = dayNumber;
+                                            playActivity.Morning = false;
+                                            familyActivity.ParentPlayActivities.Add(playActivity);
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -194,7 +307,13 @@ namespace De_Vakacientjes
                         }
 
                     }
+
+                    if (abort == true)
+                        break;
                 }
+
+                if (abort == true)
+                    break;
 
                 if (validDayColumns == false)
                 {
@@ -204,12 +323,11 @@ namespace De_Vakacientjes
                         validDayColumns = ((colMaandag != -1) && (colDinsdag != -1) && (colWoensdag != -1) && (colDonderdag != -1) && (colVrijdag != -1));
                         if (validDayColumns == false)
                         {
-                            MessageBox.Show($"Niet alle dagen zijn gevonden in week {weekNr}.", "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
+                            MessageBox.Show($"Niet alle dagen zijn gevonden in week {weekNumber}.", "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
                             return false;
                         }
                     }
                 }
-
             }
 
             return true;
@@ -228,7 +346,9 @@ namespace De_Vakacientjes
 
                 excelReader.Close();
 
-                AnalyzeData(2);
+                List<FamilyActivity> familyActivityList = new List<FamilyActivity>();
+
+                AnalyzeData(familyActivityList, 2);
             }
         }
     }

@@ -19,12 +19,16 @@ namespace De_Vakacientjes
     /// </summary>
     public partial class AddChildWindow : Window
     {
+        public bool parentMode = false;
+
+
+
         public AddChildWindow(string firstName, string lastName)
         {
             InitializeComponent();
 
-            txtFirstName.Text = firstName;
-            txtLastName.Text = lastName;
+            txtFirstName.Text = firstName.Trim();
+            txtLastName.Text = lastName.Trim();
 
             var familyList = VakacientjesDb.GetFamilies();
             foreach (Family family in familyList)
@@ -83,12 +87,22 @@ namespace De_Vakacientjes
                 return;
             }
 
-            if (VakacientjesDb.AddChild(family.Id, txtFirstName.Text.Trim(), txtLastName.Text.Trim()) == true)
+            if (parentMode == false)
             {
-                DialogResult = true;
-                Close();
+                if (VakacientjesDb.AddChild(family.Id, txtFirstName.Text, txtLastName.Text) == true)
+                {
+                    DialogResult = true;
+                    Close();
+                }
             }
-                
+            else
+            {
+                if (VakacientjesDb.AddParent(family.Id, txtFirstName.Text, txtLastName.Text) == true)
+                {
+                    DialogResult = true;
+                    Close();
+                }
+            }
         }
 
         private void BtnCancel_Click(object sender, RoutedEventArgs e)
@@ -102,6 +116,16 @@ namespace De_Vakacientjes
             string temp = txtLastName.Text;
             txtLastName.Text = txtFirstName.Text;
             txtFirstName.Text = temp;
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (parentMode)
+            {
+                this.Title = "Ouder toevoegen";
+                lblTitle.Content = "Ouder toevoegen";
+                lblDescription.Content = "Vul de gegevens van de ouder in en koppel deze aan een familie.";
+            }
         }
     }
 }

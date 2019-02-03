@@ -5,14 +5,30 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:De_Vakacientjes"
         mc:Ignorable="d"
-        Title="Selecteer kind" Height="301.271" Width="602.967" WindowStartupLocation="CenterScreen" WindowStyle="None" Style="{StaticResource WindowStyle1}">
+        Title="Selecteer kind" Height="300" Width="500" WindowStartupLocation="CenterScreen" WindowStyle="None" Style="{StaticResource WindowStyle1}" Loaded="Window_Loaded">
     <Grid>
-        <Label x:Name="lblChild" Content="Kind niet gevonden" HorizontalAlignment="Left" Margin="24,24,0,0" VerticalAlignment="Top" FontSize="20"/>
-        <ComboBox x:Name="cmbChild" HorizontalAlignment="Left" Margin="24,128,0,0" VerticalAlignment="Top" Width="444"/>
-        <Button x:Name="btnAddChild" Content="Toevoegen..." HorizontalAlignment="Left" Margin="473,128,0,0" VerticalAlignment="Top" Click="BtnAddChild_Click"/>
-        <Button x:Name="btnOK" Content="OK" HorizontalAlignment="Left" Margin="137,244,0,0" VerticalAlignment="Top" Click="BtnOK_Click"/>
-        <Button x:Name="btnIgnore" Content="Overslaan" HorizontalAlignment="Left" Margin="242,244,0,0" VerticalAlignment="Top" Click="BtnIgnore_Click"/>
-        <Button x:Name="btnAbor" Content="Afbreken" HorizontalAlignment="Left" Margin="347,244,0,0" VerticalAlignment="Top" Click="BtnAbor_Click"/>
-        <Label Content="Selecteer een bestaand kind of voeg een nieuw kind toe." HorizontalAlignment="Left" Margin="24,61,0,0" VerticalAlignment="Top"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="24" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="24" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="24" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="24" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="24" />
+        </Grid.ColumnDefinitions>
+        <Label x:Name="lblTitle" Content="Kind niet gevonden" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"/>
+        <Label x:Name="lblDescription" Content="Selecteer een bestaand kind of voeg een nieuw kind toe." HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"/>
+        <ComboBox x:Name="cmbChild" HorizontalAlignment="Stretch" VerticalAlignment="Top" Grid.Row="4" Grid.Column="1"/>
+        <Button x:Name="btnAddChild" Content="Toevoegen..." HorizontalAlignment="Left" VerticalAlignment="Top" Click="BtnAddChild_Click" Grid.Row="4" Grid.Column="2"/>
+        <Button x:Name="btnOK" Content="OK" HorizontalAlignment="Center" Margin="-208,0,0,0" VerticalAlignment="Top" Click="BtnOK_Click" Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" Style="{StaticResource OKButtonStyle}"/>
+        <Button x:Name="btnIgnore" Content="Overslaan" HorizontalAlignment="Center" VerticalAlignment="Top" Click="BtnIgnore_Click" Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2"/>
+        <Button x:Name="btnAbor" Content="Afbreken" HorizontalAlignment="Center" Margin="208,0,0,0" VerticalAlignment="Top" Click="BtnAbor_Click" Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2"/>
     </Grid>
 </Window>

@@ -78,7 +78,9 @@
     </ApplicationDefinition>
     <Compile Include="Child.cs" />
     <Compile Include="Family.cs" />
+    <Compile Include="FamilyActivity.cs" />
     <Compile Include="Parent.cs" />
+    <Compile Include="PlayActivity.cs" />
     <Compile Include="VakacientjesDb.cs" />
     <Page Include="AddChildWindow.xaml">
       <SubType>Designer</SubType>

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:De_Vakacientjes"
         mc:Ignorable="d"
-        Title="Voeg kind toe" Height="300" Width="500" WindowStartupLocation="CenterScreen" WindowStyle="None" Style="{StaticResource WindowStyle1}">
+        Title="Kind toevoegen" Height="300" Width="500" WindowStartupLocation="CenterScreen" WindowStyle="None" Style="{StaticResource WindowStyle1}" Loaded="Window_Loaded">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="24" />
@@ -26,19 +26,18 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="24" />
         </Grid.ColumnDefinitions>
-        
-        <Label Content="Kind toevoegen" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3"/>
-        <Label Content="Vul de gegevens van het kind in en koppel deze aan een familie." HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3"/>
+
+        <Label x:Name="lblTitle" Content="Kind toevoegen" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3"/>
+        <Label x:Name="lblDescription" Content="Vul de gegevens van het kind in en koppel deze aan een familie." HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3"/>
         <Label Content="Voornaam" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="5" Grid.Column="1"/>
         <Label Content="Familienaam" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="6" Grid.Column="1"/>
         <Label Content="Familie" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="7" Grid.Column="1"/>
-        <TextBox x:Name="txtFirstName" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Row="5" Grid.Column="2"/>
-        <TextBox x:Name="txtLastName" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Row="6" Grid.Column="2"/>
-        <ComboBox x:Name="cmbFamily" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="7" Grid.Column="2"/>
+        <TextBox x:Name="txtFirstName" HorizontalAlignment="Stretch"  TextWrapping="Wrap" VerticalAlignment="Top" Grid.Row="5" Grid.Column="2"/>
+        <TextBox x:Name="txtLastName" HorizontalAlignment="Stretch" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Row="6" Grid.Column="2"/>
+        <ComboBox x:Name="cmbFamily" HorizontalAlignment="Stretch" VerticalAlignment="Top" Grid.Row="7" Grid.Column="2"/>
         <Button x:Name="btnAddFamily" Content="Toevoegen..." HorizontalAlignment="Left" VerticalAlignment="Top" Click="BtnAddFamily_Click" Grid.Row="7" Grid.Column="3"/>
-        <Button x:Name="btnSwitchNames" Content="Omwisselen" HorizontalAlignment="Left" VerticalAlignment="Top" Click="BtnSwitchNames_Click" Grid.Row="5" Grid.Column="3"/>
-        
-        <Button x:Name="btnOK" Content="OK" HorizontalAlignment="Center" Margin="-104,0,0,0" VerticalAlignment="Top" Click="BtnOK_Click" Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="4"/>
+        <Button x:Name="btnSwitchNames" Content="Omwisselen" HorizontalAlignment="Left" VerticalAlignment="Center" Click="BtnSwitchNames_Click" Grid.Row="5" Grid.Column="3" Grid.RowSpan="2" Height="40" Margin="0,10"/>
+        <Button x:Name="btnOK" Content="OK" HorizontalAlignment="Center" Margin="-104,0,0,0" VerticalAlignment="Top" Click="BtnOK_Click" Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="4" Style="{StaticResource OKButtonStyle}"/>
         <Button x:Name="btnCancel" Content="Annuleren" HorizontalAlignment="Center" Margin="104,0,0,0" VerticalAlignment="Top" Click="BtnCancel_Click" Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="4"/>
     </Grid>
 </Window>
