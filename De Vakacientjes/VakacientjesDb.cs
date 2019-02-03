@@ -140,6 +140,41 @@ namespace De_Vakacientjes
             return family;
         }
 
+        public static Family GetFamily(int familyId)
+        {
+            Family family = new Family();
+
+            MySqlConnection conn = new MySqlConnection(connectionString);
+
+            try
+            {
+                conn.Open();
+
+                string sql = $"select * from family where id = {familyId}";
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    family.Id = Convert.ToInt32(reader["id"]);
+                    family.Name = reader["name"].ToString();
+                    family.Email = reader["email"].ToString();
+                }
+                reader.Close();
+
+                conn.Close();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"VakacientjesDb.GetFamily failed.\n\n{e.ToString()}");
+
+                if (conn.State == System.Data.ConnectionState.Open)
+                    conn.Close();
+            }
+
+            return family;
+        }
+
         public static Child GetChild(string firstName, string lastName)
         {
             firstName = firstName.Trim();

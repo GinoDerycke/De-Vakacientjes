@@ -57,8 +57,6 @@ namespace De_Vakacientjes
 
             DataTable table = xlsxDataSet.Tables[tableNr];
 
-            grdTest.ItemsSource = table.AsDataView();
-
             int colMaandag = -1;
             int colDinsdag = -1;
             int colWoensdag = -1;
@@ -162,6 +160,8 @@ namespace De_Vakacientjes
                                     p = endTime.IndexOf("h", StringComparison.InvariantCultureIgnoreCase);
                                 if (p == -1)
                                     p = endTime.IndexOf(":", StringComparison.InvariantCultureIgnoreCase);
+                                if (p == -1)
+                                    p = endTime.IndexOf(".", StringComparison.InvariantCultureIgnoreCase);
                                 hourString = endTime.Substring(0, p);
                                 if (String.IsNullOrWhiteSpace(hourString) == false)
                                     hour = Convert.ToInt32(hourString);
@@ -348,7 +348,10 @@ namespace De_Vakacientjes
 
                 List<FamilyActivity> familyActivityList = new List<FamilyActivity>();
 
-                AnalyzeData(familyActivityList, 2);
+                for (int i = 1; i <= 8; i++)
+                    AnalyzeData(familyActivityList, i);
+
+                grdOverview.ItemsSource = familyActivityList;
             }
         }
     }
