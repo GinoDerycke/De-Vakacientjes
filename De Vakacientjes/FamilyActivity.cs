@@ -176,7 +176,31 @@ namespace De_Vakacientjes
 
         private int GetNumberOfOverlappingActivities(int weekNumber)
         {
-            return 0; //TODO GetNumberOfOverlappingActivities
+            int number = 0;
+
+            if (weekNumber != 0)
+            {
+                var childPlayActivies = ChildPlayActivities.Where(a => a.WeekNumber == weekNumber);
+                var parentPlayActivities = ParentPlayActivities.Where(a => a.WeekNumber == weekNumber);
+
+                foreach(PlayActivity playActivity in childPlayActivies)
+                {
+                    var activity = parentPlayActivities.FirstOrDefault(a => (a.DayNumber == playActivity.DayNumber) && (a.Morning == playActivity.Morning));
+                    if (activity != null)
+                        number++;
+                }
+            }
+            else
+            {
+                foreach(PlayActivity playActivity in ChildPlayActivities)
+                {
+                    var activity = ParentPlayActivities.FirstOrDefault(a => (a.DayNumber == playActivity.DayNumber) && (a.Morning == playActivity.Morning));
+                    if (activity != null)
+                        number++;
+                }
+            }
+
+            return number;
         }
 
         public int NumberOfOverlappingActivities
@@ -264,7 +288,24 @@ namespace De_Vakacientjes
         {
             get
             {
-                return 0; //TODO ActivitySaldo
+                int NrOfChildPlayActivitiesNeeded = 0;
+                List<string> UniquePlayActivitiesNeeded = new List<string>();
+
+                foreach (PlayActivity playActivity in ChildPlayActivities)
+                {
+                    var activity = ParentPlayActivities.FirstOrDefault(a => (a.DayNumber == playActivity.DayNumber) && (a.Morning == playActivity.Morning));
+                    if (activity == null)
+                    {
+                        string s = playActivity.WeekNumber.ToString() + ';' + playActivity.DayNumber.ToString() + ';' + playActivity.Morning.ToString();
+                        if (UniquePlayActivitiesNeeded.IndexOf(s) == -1)
+                        {
+                            NrOfChildPlayActivitiesNeeded++;
+                            UniquePlayActivitiesNeeded.Add(s);
+                        }
+                    }
+                }
+
+                return (ParentPlayActivities.Count() * 4) - NrOfChildPlayActivitiesNeeded;
             }
         }
 

@@ -2,6 +2,7 @@
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Globalization;
 using System.IO;
@@ -211,6 +212,7 @@ namespace De_Vakacientjes
 
                                         if (morning == true)
                                         {
+
                                             PlayActivity playActivity = new PlayActivity();
                                             playActivity.PersonId = child1.Id;
                                             playActivity.WeekNumber = weekNumber;
@@ -357,9 +359,12 @@ namespace De_Vakacientjes
                     if (res == false)
                         break;
                 }
-                    
 
+                lblFileName.Content = System.IO.Path.GetFileName(openFileDialog.FileName);
                 grdOverview.ItemsSource = familyActivityList;
+
+                var column = grdOverview.Columns[0];
+                grdOverview.Items.SortDescriptions.Add(new SortDescription(column.SortMemberPath, ListSortDirection.Ascending));
             }
         }
     }

@@ -81,6 +81,7 @@
     <Compile Include="FamilyActivity.cs" />
     <Compile Include="Parent.cs" />
     <Compile Include="PlayActivity.cs" />
+    <Compile Include="SaldoToBrushConverter.cs" />
     <Compile Include="VakacientjesDb.cs" />
     <Page Include="AddChildWindow.xaml">
       <SubType>Designer</SubType>
