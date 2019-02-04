@@ -330,7 +330,10 @@ namespace De_Vakacientjes
                 }
             }
 
-            return true;
+            if (abort == false)
+                return true;
+            else
+                return false;
         }
 
         private void BtnOpen_Click(object sender, RoutedEventArgs e)
@@ -349,7 +352,12 @@ namespace De_Vakacientjes
                 List<FamilyActivity> familyActivityList = new List<FamilyActivity>();
 
                 for (int i = 1; i <= 8; i++)
-                    AnalyzeData(familyActivityList, i);
+                {
+                    var res = AnalyzeData(familyActivityList, i);
+                    if (res == false)
+                        break;
+                }
+                    
 
                 grdOverview.ItemsSource = familyActivityList;
             }
