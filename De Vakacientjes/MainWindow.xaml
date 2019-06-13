@@ -82,14 +82,14 @@
                 </DataTemplate>
                 <DataTemplate x:Key="totalDataTemplate">
                     <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
-                        <TextBlock Text="{Binding NumberOfChildActivities, StringFormat='{}Kind: {0}'}" />
-                        <TextBlock Text="{Binding NumberOfParentActivities, StringFormat='{}Ouder: {0}'}" />
-                        <TextBlock Text="{Binding NumberOfOverlappingActivities, StringFormat='{}Extra: {0}'}" />
+                        <TextBlock Text="{Binding NumberOfChildActivities, StringFormat='{}Kind: {0}'}" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding NumberOfParentActivities, StringFormat='{}Ouder: {0}'}" FontWeight="Bold" />
+                        <TextBlock Text="{Binding NumberOfOverlappingActivities, StringFormat='{}Extra: {0}'}" FontWeight="Bold"/>
                     </StackPanel>
                 </DataTemplate>
             </DataGrid.Resources>
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Familie" Binding="{Binding Family.Name}" Width="200" />
+                <DataGridTextColumn Header="Familie" Binding="{Binding Family.Name}" Width="200" FontWeight="Bold" />
                 <DataGridTemplateColumn Header="Week 1" CellTemplate="{StaticResource week1DataTemplate}" Width="9*"/>
                 <DataGridTemplateColumn Header="Week 2" CellTemplate="{StaticResource week2DataTemplate}" Width="9*"/>
                 <DataGridTemplateColumn Header="Week 3" CellTemplate="{StaticResource week3DataTemplate}" Width="9*"/>
@@ -98,9 +98,9 @@
                 <DataGridTemplateColumn Header="Week 6" CellTemplate="{StaticResource week6DataTemplate}" Width="9*"/>
                 <DataGridTemplateColumn Header="Week 7" CellTemplate="{StaticResource week7DataTemplate}" Width="9*"/>
                 <DataGridTemplateColumn Header="Week 8" CellTemplate="{StaticResource week8DataTemplate}" Width="9*"/>
-                <DataGridTemplateColumn Header="Totaal" CellTemplate="{StaticResource totalDataTemplate}" Width="9*"/>
-                <DataGridTextColumn Header="Prijs" Binding="{Binding TotalPrice, StringFormat='{}{0} € '}" Width="100" />
-                <DataGridTextColumn Header="Bijspeel saldo" Binding="{Binding ActivitySaldo}" Width="100">
+                <DataGridTemplateColumn Header="Totaal" CellTemplate="{StaticResource totalDataTemplate}" Width="9*" />
+                <DataGridTextColumn Header="Prijs" Binding="{Binding TotalPrice, StringFormat='{}{0} € '}" Width="100" FontWeight="Bold"/>
+                <DataGridTextColumn Header="Bijspeel saldo" Binding="{Binding ActivitySaldo}" Width="100" FontWeight="Bold">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="{x:Type TextBlock}">
                             <Setter Property="Background" Value="{Binding ActivitySaldo, Converter={StaticResource SaldoToBrushConverter}}"/>

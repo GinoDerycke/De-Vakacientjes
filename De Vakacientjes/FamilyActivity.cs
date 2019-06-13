@@ -194,7 +194,7 @@ namespace De_Vakacientjes
             {
                 foreach(PlayActivity playActivity in ChildPlayActivities)
                 {
-                    var activity = ParentPlayActivities.FirstOrDefault(a => (a.DayNumber == playActivity.DayNumber) && (a.Morning == playActivity.Morning));
+                    var activity = ParentPlayActivities.FirstOrDefault(a => (a.WeekNumber == playActivity.WeekNumber) && (a.DayNumber == playActivity.DayNumber) && (a.Morning == playActivity.Morning));
                     if (activity != null)
                         number++;
                 }
@@ -305,7 +305,8 @@ namespace De_Vakacientjes
                     }
                 }
 
-                return (ParentPlayActivities.Count() * 4) - NrOfChildPlayActivitiesNeeded;
+                //return (ParentPlayActivities.Count() * 4) - NrOfChildPlayActivitiesNeeded;
+                return (ParentPlayActivities.Count() * 3) - NrOfChildPlayActivitiesNeeded;
             }
         }
 
